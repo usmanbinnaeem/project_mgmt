@@ -11,8 +11,15 @@ import { User } from './entities/user.entity';
 export class UserService {
 
   constructor(@InjectRepository(User) private readonly repository: Repository<User>) { }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const email = createUserDto.email;
+    const existUser = await this.repository.findOneBy({ email })
+    if (!existUser) {
+      const user = this.repository.save(createUserDto)
+      return user;
+    } else {
+      return "User already exists with this email"
+    }
   }
 
   findAll() {
@@ -20,14 +27,18 @@ export class UserService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    const user = this.repository.findOneBy({ id })
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    await this.repository.delete(id)
+    return {
+      message: `User deleted Successfully with id# ${id}`
+    }
   }
 }
