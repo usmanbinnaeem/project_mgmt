@@ -12,8 +12,8 @@ export class ClientService {
   constructor(@InjectRepository(Client) private readonly repository: Repository<Client>) { }
 
   async create(createClientDto: CreateClientDto, user: User) {
-    const contactEmail = createClientDto.contactEmail;
-    const existClient = await this.repository.findOneBy({ contactEmail })
+    const contactNumber = createClientDto.contactNumber;
+    const existClient = await this.repository.findOneBy({ contactNumber })
     if (!existClient) {
       const client = this.repository.save({
         ...createClientDto,
@@ -28,7 +28,9 @@ export class ClientService {
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({
+      relations: ['user']
+    });
   }
 
   async findOne(id: number) {

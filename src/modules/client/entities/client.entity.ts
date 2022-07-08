@@ -5,14 +5,14 @@ import { BaseEntity } from "../../base.entity";
 
 @Entity('client')
 export class Client extends BaseEntity {
-    @OneToOne(() => User, (user) => user.client)
+    @OneToOne(() => User, (user) => user.client, {
+        eager: true,
+        cascade: true
+    })
     contactPerson: User;
 
     @Column()
     contactNumber: number;
-
-    @Column()
-    contactEmail: string;
 
     @Column({ nullable: true })
     address: string;

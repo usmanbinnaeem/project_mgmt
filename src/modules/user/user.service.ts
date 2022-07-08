@@ -3,6 +3,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ClientService } from '../client/client.service';
+import { Client } from '../client/entities/client.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,12 +12,17 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private readonly repository: Repository<User>) { }
+  constructor(
+    @InjectRepository(User) private readonly repository: Repository<User>,
+    @InjectRepository(Client) private readonly crepository: Repository<Client>
+
+  ) { }
   async create(createUserDto: CreateUserDto) {
     const email = createUserDto.email;
     const existUser = await this.repository.findOneBy({ email })
     if (!existUser) {
-      const user = this.repository.save(createUserDto)
+      const user = await this.repository.save(createUserDto)
+      this.crepository.save(createUserDto.client)
       return user;
     } else {
       return "User already exists with this email"
@@ -23,7 +30,9 @@ export class UserService {
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({
+      relations: ['client']
+    });
   }
 
   findOne(id: number) {
