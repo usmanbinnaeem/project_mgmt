@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateDesignationDto } from '../designation/dto/create-designation.dto';
 import { User } from '../user/entities/user.entity';
 import { Role } from '../user/enums';
 import { CreateProfileDto } from './dto/create-profile.dto';
@@ -16,14 +17,14 @@ export class ProfileService {
     @InjectRepository(User) private readonly urepository: Repository<User>
   ) { }
 
-  async create(createProfileDto: CreateProfileDto, id: number) {
+  async create(createProfileDto: CreateProfileDto, id: number, designation: CreateDesignationDto) {
     const user = await this.urepository.findOneBy({ id })
     // console.log(":::: USER", user)
     if (user.role === Role.Admin || user.role === Role.Staff) {
       try {
         const profile = await this.repository.save({
           ...createProfileDto,
-          user
+          user, designation
         })
         return profile;
       } catch (error) {

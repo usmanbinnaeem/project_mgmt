@@ -1,6 +1,7 @@
+/* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectCategoryController } from './project-category.controller';
-import { ProjectCategoryService } from './project-category.service';
+import { ProjectCategoryController } from './projectCategory.controller';
+import { ProjectCategoryService } from './projectCategory.service';
 
 describe('ProjectCategoryController', () => {
   let controller: ProjectCategoryController;

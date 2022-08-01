@@ -1,15 +1,16 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ProfileService } from '../profile/profile.service';
 import { DesignationService } from './designation.service';
 import { CreateDesignationDto } from './dto/create-designation.dto';
 import { UpdateDesignationDto } from './dto/update-designation.dto';
 
 @Controller('designations')
 export class DesignationController {
-  constructor(private readonly designationService: DesignationService) { }
+  constructor(private readonly designationService: DesignationService, private readonly profileService: ProfileService) { }
 
   @Post()
-  create(@Body() createDesignationDto: CreateDesignationDto) {
+  async create(@Body() createDesignationDto: CreateDesignationDto) {
     return this.designationService.create(createDesignationDto);
   }
 

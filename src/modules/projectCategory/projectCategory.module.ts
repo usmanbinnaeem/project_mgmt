@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { ProjectCategoryService } from './project-category.service';
-import { ProjectCategoryController } from './project-category.controller';
+import { ProjectCategoryService } from './projectCategory.service';
+import { ProjectCategoryController } from './projectCategory.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProjectCategory } from './entities/project-category.entity';
+import { ProjectCategory } from './entities/projectCategory.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProjectCategory])],

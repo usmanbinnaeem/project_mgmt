@@ -17,7 +17,7 @@ export class Client extends BaseEntity {
     @Column({ nullable: true })
     address: string;
 
-    @OneToOne(() => User, (user) => user.profile)
+    @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
     @JoinColumn()
     user: User
 

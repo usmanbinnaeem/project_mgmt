@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ProjectCategoryService } from './project-category.service';
+import { ProjectCategoryService } from './projectCategory.service';
 
 describe('ProjectCategoryService', () => {
   let service: ProjectCategoryService;

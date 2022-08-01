@@ -3,14 +3,18 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { DesignationService } from '../designation/designation.service';
 
 @Controller('profiles')
 export class ProfileController {
-  constructor(private readonly profileService: ProfileService) { }
+  constructor(private readonly profileService: ProfileService, private readonly designationService: DesignationService) { }
 
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto, userId = 39) {
-    return this.profileService.create(createProfileDto, userId);
+  async create(@Body() createProfileDto: CreateProfileDto, userId = 38) {
+
+    const designation = await this.designationService.create(createProfileDto.designation)
+    const profile = await this.profileService.create(createProfileDto, userId, designation);
+    return profile;
   }
 
   @Get()

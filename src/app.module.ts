@@ -8,7 +8,7 @@ import { TaskModule } from './modules/task/task.module';
 import { ProjectModule } from './modules/project/project.module';
 import { ClientModule } from './modules/client/client.module';
 import { TeamModule } from './modules/team/team.module';
-import { ProjectCategoryModule } from './modules/project-category/project-category.module';
+import { ProjectCategoryModule } from './modules/projectCategory/projectCategory.module';
 import { ProjectDocumentModule } from './modules/project-document/project-document.module';
 
 @Module({

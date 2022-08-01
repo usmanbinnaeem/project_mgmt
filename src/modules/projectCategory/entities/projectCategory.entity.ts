@@ -9,5 +9,5 @@ export class ProjectCategory extends BaseEntity {
     name: string
 
     @OneToMany(() => Project, (project) => project.category)
-    project: Project[]
+    projects: Project[]
 }

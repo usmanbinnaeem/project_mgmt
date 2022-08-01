@@ -6,10 +6,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './enums';
 import { ProfileService } from '../profile/profile.service';
 import { ClientService } from '../client/client.service';
+import { DesignationService } from '../designation/designation.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly prepository: ProfileService, private readonly crepository: ClientService) { }
+  constructor(private readonly userService: UserService, private readonly desiginationService: DesignationService, private readonly profileService: ProfileService, private readonly clientService: ClientService) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -17,12 +18,14 @@ export class UserController {
     const existUser = await this.userService.findOneByEmail(email)
     if (!existUser) {
       const user = await this.userService.create(createUserDto)
+      const desigination = await this.desiginationService.create(createUserDto.profile.designation)
       if (createUserDto.role === Role.Admin || createUserDto.role === Role.Staff) {
-        await this.prepository.create(createUserDto.profile, user.id)
+        await this.profileService.create(createUserDto.profile, user.id, desigination)
       }
       if (createUserDto.role === Role.Client) {
-        await this.crepository.create(createUserDto.client, user.id)
+        await this.clientService.create(createUserDto.client, user.id)
       }
+      return user
     }
   }
 

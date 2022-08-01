@@ -1,11 +1,12 @@
+/* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ProjectCategoryService } from './project-category.service';
-import { CreateProjectCategoryDto } from './dto/create-project-category.dto';
-import { UpdateProjectCategoryDto } from './dto/update-project-category.dto';
+import { ProjectCategoryService } from './projectCategory.service';
+import { CreateProjectCategoryDto } from './dto/create-projectCategory.dto';
+import { UpdateProjectCategoryDto } from './dto/update-projectCategory.dto';
 
-@Controller('project-category')
+@Controller('projectcategory')
 export class ProjectCategoryController {
-  constructor(private readonly projectCategoryService: ProjectCategoryService) {}
+  constructor(private readonly projectCategoryService: ProjectCategoryService) { }
 
   @Post()
   create(@Body() createProjectCategoryDto: CreateProjectCategoryDto) {

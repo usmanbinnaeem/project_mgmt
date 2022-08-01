@@ -10,8 +10,8 @@ export class Team extends BaseEntity {
     name: string;
 
     @OneToMany(() => Profile, (profile) => profile.team)
-    profile: Profile[];
+    profiles: Profile[];
 
     @OneToMany(() => Project, (project) => project.team)
-    project: Project[];
+    projects: Project[];
 }

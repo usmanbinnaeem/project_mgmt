@@ -15,19 +15,22 @@ export class UserService {
     const email = createUserDto.email;
     const existUser = await this.repository.findOneBy({ email })
     if (!existUser) {
-      const userr = await this.repository.save(createUserDto)
-      return userr
+      const user = await this.repository.save(createUserDto)
+      return user
     } else {
       throw new BadRequestException("User already exists with this email")
     }
   }
 
   findAll() {
-    return this.repository.find();
+    return this.repository.find({ relations: ['profiles', 'clients'] });
   }
 
   findOne(id: number) {
-    const user = this.repository.findOneBy({ id })
+    const user = this.repository.findOne({
+      where: { id },
+      relations: ['profiles', 'clients']
+    })
     return user;
   }
 
