@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { User } from "../../user/entities/user.entity";
-import { Column, Entity, ManyToOne, OneToMany, OneToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
 import { Designation } from "../../designation/entities/designation.entity";
 import { Task } from "../../task/entities/task.entity";
 import { Team } from "../../team/entities/team.entity";
@@ -14,7 +14,6 @@ export class Profile extends BaseEntity {
     @Column()
     address: string;
 
-    // @Column({type: 'tinyint', default: 0})
     @Column({ default: false })
     isRemote: boolean;
 
@@ -22,6 +21,7 @@ export class Profile extends BaseEntity {
     totalHours: number;
 
     @OneToOne(() => User, (user) => user.profile)
+    @JoinColumn()
     user: User;
 
     @ManyToOne(() => Designation, (designation) => designation.profiles)

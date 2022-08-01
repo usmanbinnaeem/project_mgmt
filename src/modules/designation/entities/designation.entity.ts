@@ -10,4 +10,7 @@ export class Designation extends BaseEntity {
 
     @OneToMany(() => Profile, (profile) => profile.designation)
     profiles: Profile[];
+
+    @Column()
+    responsibilities: string;
 }

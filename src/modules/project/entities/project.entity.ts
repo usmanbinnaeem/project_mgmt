@@ -8,7 +8,7 @@ import { BaseEntity } from "../../base.entity";
 
 @Entity('project')
 export class Project extends BaseEntity {
-    @Column({ nullable: true })
+    @Column()
     title: string;
 
     @Column({ nullable: true })
@@ -27,7 +27,7 @@ export class Project extends BaseEntity {
     feasibility: string;
 
     @Column()
-    isInHouse: string;
+    isInHouse: boolean;
 
     @Column({ nullable: false })
     status: boolean;

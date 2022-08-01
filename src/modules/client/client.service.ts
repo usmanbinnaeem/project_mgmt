@@ -9,17 +9,22 @@ import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectRepository(Client) private readonly repository: Repository<Client>) { }
+  constructor(@InjectRepository(Client) private readonly repository: Repository<Client>,
+    @InjectRepository(User) private readonly urepository: Repository<User>) { }
 
-  async create(createClientDto: CreateClientDto, user: User) {
-    const contactNumber = createClientDto.contactNumber;
-    const existClient = await this.repository.findOneBy({ contactNumber })
+  async create(createClientDto: CreateClientDto, id: number) {
+    const user = await this.urepository.findOneBy({ id })
+    const contactEmail = createClientDto.contactEmail;
+    const existClient = await this.repository.findOneBy({ contactEmail })
     if (!existClient) {
-      const client = this.repository.save({
-        ...createClientDto,
-        contactPerson: user
-      });
-      return client;
+      if (user.role === "client") {
+        const client = this.repository.save({ ...createClientDto, user });
+        return client;
+      } else {
+        return {
+          message: "user already have profile associated"
+        }
+      }
     } else {
       return {
         message: 'client already Exists'
@@ -28,9 +33,7 @@ export class ClientService {
   }
 
   findAll() {
-    return this.repository.find({
-      relations: ['user']
-    });
+    return this.repository.find();
   }
 
   async findOne(id: number) {

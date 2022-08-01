@@ -9,8 +9,8 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) { }
 
   @Post()
-  create(@Body() createProfileDto: CreateProfileDto) {
-    return this.profileService.create(createProfileDto);
+  create(@Body() createProfileDto: CreateProfileDto, userId = 39) {
+    return this.profileService.create(createProfileDto, userId);
   }
 
   @Get()

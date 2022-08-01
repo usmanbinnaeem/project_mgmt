@@ -13,7 +13,7 @@ export class Task extends BaseEntity {
     description: string;
 
     @ManyToOne(() => Profile, (profile) => profile.task)
-    asignee: Profile
+    asignee: Profile;
 
     @Column({ nullable: false })
     reporter: string;

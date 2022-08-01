@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
-import { Client } from "../../client/entities/client.entity";
-import { Profile } from "../../profile/entities/profile.entity";
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { CreateClientDto } from "../../client/dto/create-client.dto";
+import { CreateProfileDto } from "../../profile/dto/create-profile.dto";
 
 export class CreateUserDto {
 
@@ -22,12 +22,16 @@ export class CreateUserDto {
     password: string;
 
     @IsNotEmpty()
-    @IsString()
+    @IsIn(['admin', 'staff', 'client'])
     role: string;
 
-    @IsOptional()
-    profile: Profile;
+    @IsNotEmpty()
+    @IsIn(['active', 'banned', 'inactive'])
+    status: string;
 
     @IsOptional()
-    client: Client;
+    profile: CreateProfileDto;
+
+    @IsOptional()
+    client: CreateClientDto;
 }

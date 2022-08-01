@@ -1,12 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Project } from "../../project/entities/project.entity";
-import { User } from "../../user/entities/user.entity";
 import { Column, Entity, ManyToOne } from "typeorm";
 import { BaseEntity } from "../../base.entity";
 
 @Entity('projectDocument')
 export class ProjectDocument extends BaseEntity {
-    @Column()
+    @Column({ nullable: false })
     name: string;
 
     @Column()
@@ -19,5 +18,5 @@ export class ProjectDocument extends BaseEntity {
     type: string;
 
     @ManyToOne(() => Project, (project) => project.document)
-    project: Project
+    project: Project;
 }

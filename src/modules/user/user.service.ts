@@ -1,10 +1,8 @@
 /* eslint-disable prettier/prettier */
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientService } from '../client/client.service';
-import { Client } from '../client/entities/client.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -12,32 +10,29 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UserService {
 
-  constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>,
-    @InjectRepository(Client) private readonly crepository: Repository<Client>
-
-  ) { }
+  constructor(@InjectRepository(User) private readonly repository: Repository<User>) { }
   async create(createUserDto: CreateUserDto) {
     const email = createUserDto.email;
     const existUser = await this.repository.findOneBy({ email })
     if (!existUser) {
-      const user = await this.repository.save(createUserDto)
-      this.crepository.save(createUserDto.client)
-      return user;
+      const userr = await this.repository.save(createUserDto)
+      return userr
     } else {
-      return "User already exists with this email"
+      throw new BadRequestException("User already exists with this email")
     }
   }
 
   findAll() {
-    return this.repository.find({
-      relations: ['client']
-    });
+    return this.repository.find();
   }
 
   findOne(id: number) {
     const user = this.repository.findOneBy({ id })
     return user;
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.repository.findOneBy({ email })
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

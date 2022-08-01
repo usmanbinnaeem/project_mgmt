@@ -5,7 +5,7 @@ import { BaseEntity } from "../../base.entity";
 
 @Entity('projectCategory')
 export class ProjectCategory extends BaseEntity {
-    @Column({ nullable: true })
+    @Column({ nullable: false })
     name: string
 
     @OneToMany(() => Project, (project) => project.category)

@@ -1,20 +1,23 @@
 /* eslint-disable prettier/prettier */
 import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
-import { User } from "src/modules/user/entities/user.entity";
+import { User } from "../../user/entities/user.entity";
 
 export class CreateClientDto {
 
-    @IsNotEmpty()
-    contactPerson: User;
+    @IsOptional()
+    contactPerson: string;
 
-    @IsNotEmpty()
-    contactNumber: number;
+    @IsOptional()
+    contactNumber: string;
 
-    @IsNotEmpty({ message: 'Enail is required' })
+    @IsOptional({ message: 'Email is required' })
     @IsEmail()
     contactEmail: string;
 
-    @IsOptional()
+    @IsNotEmpty()
     address: string;
+
+    @IsOptional()
+    user: User
 
 }

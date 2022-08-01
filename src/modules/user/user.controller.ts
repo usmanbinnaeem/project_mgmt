@@ -3,14 +3,27 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from './enums';
+import { ProfileService } from '../profile/profile.service';
+import { ClientService } from '../client/client.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService, private readonly prepository: ProfileService, private readonly crepository: ClientService) { }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const email = createUserDto.email;
+    const existUser = await this.userService.findOneByEmail(email)
+    if (!existUser) {
+      const user = await this.userService.create(createUserDto)
+      if (createUserDto.role === Role.Admin || createUserDto.role === Role.Staff) {
+        await this.prepository.create(createUserDto.profile, user.id)
+      }
+      if (createUserDto.role === Role.Client) {
+        await this.crepository.create(createUserDto.client, user.id)
+      }
+    }
   }
 
   @Get()
