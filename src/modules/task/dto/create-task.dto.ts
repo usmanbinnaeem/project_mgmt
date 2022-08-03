@@ -12,7 +12,7 @@ export class CreateTaskDto {
     description: string;
 
     @IsOptional()
-    asignee: CreateProfileDto;
+    assignee: CreateProfileDto;
 
     @IsString()
     reporter: string;

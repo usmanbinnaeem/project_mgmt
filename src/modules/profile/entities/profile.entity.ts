@@ -1,11 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { User } from "../../user/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import { Designation } from "../../designation/entities/designation.entity";
-import { Task } from "../../task/entities/task.entity";
-import { Team } from "../../team/entities/team.entity";
-import { BaseEntity } from "../../base.entity";
-import { jobType } from "../enums";
+import { Designation } from '../../designation/entities/designation.entity';
+import { User } from '../../user/entities/user.entity';
+import { Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { BaseEntity } from '../../base.entity';
+import { Task } from '../../task/entities/task.entity';
+import { Team } from '../../team/entities/team.entity';
 
 @Entity('profiles')
 export class Profile extends BaseEntity {
@@ -15,17 +14,14 @@ export class Profile extends BaseEntity {
     @Column()
     address: string;
 
-    @Column({ type: 'enum', enum: jobType, default: jobType.fullTime })
-    jobType: string;
-
     @Column({ default: false })
     isRemote: boolean;
 
     @Column()
     totalHours: number;
 
-    @Column({ nullable: true })
-    sallaryPerHour: number;
+    @Column({ nullable: true, default: 10 })
+    salaryPerHour: number;
 
     @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
     @JoinColumn()
@@ -34,10 +30,9 @@ export class Profile extends BaseEntity {
     @ManyToOne(() => Designation, (designation) => designation.profiles)
     designation: Designation;
 
-    @OneToMany(() => Task, (task) => task.asignee)
-    task: Task[];
+    @OneToMany(() => Task, (task) => task.assignee)
+    tasks: Task[];
 
     @ManyToOne(() => Team, (team) => team.profiles)
     team: Team;
-
 }

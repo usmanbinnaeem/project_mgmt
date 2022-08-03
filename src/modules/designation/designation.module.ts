@@ -1,15 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { DesignationService } from './designation.service';
 import { DesignationController } from './designation.controller';
-import { Designation } from './entities/designation.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProfileModule } from '../profile/profile.module';
+import { Designation } from './entities/designation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Designation]), forwardRef(() => ProfileModule)],
+  imports: [TypeOrmModule.forFeature([Designation])],
   controllers: [DesignationController],
   providers: [DesignationService],
-  exports: [TypeOrmModule, DesignationService],
+  exports: [DesignationService],
 })
 export class DesignationModule { }

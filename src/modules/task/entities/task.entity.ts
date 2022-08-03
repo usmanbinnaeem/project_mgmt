@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+
 import { Profile } from "../../profile/entities/profile.entity";
 import { Project } from "../../project/entities/project.entity";
 import { Column, Entity, ManyToOne } from "typeorm";
@@ -12,8 +13,8 @@ export class Task extends BaseEntity {
     @Column({ nullable: true })
     description: string;
 
-    @ManyToOne(() => Profile, (profile) => profile.task)
-    asignee: Profile;
+    @ManyToOne(() => Profile, (profile) => profile.tasks)
+    assignee: Profile;
 
     @Column({ nullable: false })
     reporter: string;
@@ -27,6 +28,6 @@ export class Task extends BaseEntity {
     @Column({ default: false })
     status: boolean;
 
-    @ManyToOne(() => Project, (project) => project.task)
+    @ManyToOne(() => Project, (project) => project.tasks)
     project: Project;
 }

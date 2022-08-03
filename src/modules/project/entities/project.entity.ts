@@ -1,10 +1,11 @@
 /* eslint-disable prettier/prettier */
-import { ProjectCategory } from "../../projectCategory/entities/projectCategory.entity";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { ProjectCategory } from "../../project-category/entities/project-category.entity";
 import { ProjectDocument } from "../../project-document/entities/project-document.entity";
-import { Task } from "../../task/entities/task.entity";
 import { Team } from "../../team/entities/team.entity";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../../base.entity";
+import { Task } from "../../task/entities/task.entity";
+import { Client } from "../../client/entities/client.entity";
 
 @Entity('project')
 export class Project extends BaseEntity {
@@ -33,11 +34,14 @@ export class Project extends BaseEntity {
     status: boolean;
 
     @OneToMany(() => ProjectDocument, (document) => document.project)
-    document: ProjectDocument[];
+    documents: ProjectDocument[];
+
+    @ManyToOne(() => Client, (client) => client.projects)
+    client: Client;
 
     @ManyToOne(() => Team, (team) => team.projects)
     team: Team;
 
     @OneToMany(() => Task, (task) => task.project)
-    task: Task[];
+    tasks: Task[];
 }

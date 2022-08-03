@@ -17,6 +17,6 @@ export class ProjectDocument extends BaseEntity {
     @Column()
     type: string;
 
-    @ManyToOne(() => Project, (project) => project.document)
+    @ManyToOne(() => Project, (project) => project.documents)
     project: Project;
 }

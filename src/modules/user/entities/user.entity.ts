@@ -1,11 +1,11 @@
 /* eslint-disable prettier/prettier */
+import { Column, Entity, OneToOne } from 'typeorm';
 
-import { Profile } from "../../profile/entities/profile.entity";
-import { Column, Entity, OneToOne } from "typeorm";
-import { Role } from "../enums";
-import { Client } from "../../client/entities/client.entity";
-import { BaseEntity } from "../../base.entity";
-import { Status } from "../enums/status.enum";
+import { Role, Status } from '../enums';
+import { BaseEntity } from '../../base.entity';
+
+import { Profile } from '../../profile/entities/profile.entity';
+import { Client } from '../../client/entities/client.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -21,12 +21,12 @@ export class User extends BaseEntity {
     @Column({ type: 'enum', enum: Role, default: Role.Staff })
     role: string;
 
+    @Column({ type: 'enum', enum: Status, default: Status.Active })
+    status: string;
+
     @OneToOne(() => Profile, (profile) => profile.user)
     profile: Profile;
 
-    @OneToOne(() => Client, (client) => client.contactPerson)
+    @OneToOne(() => Client, (client) => client.user)
     client: Client;
-
-    @Column({ type: 'enum', enum: Status, default: Status.Inactive })
-    status: string;
 }

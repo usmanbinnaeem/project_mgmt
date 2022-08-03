@@ -1,11 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { User } from "../../user/entities/user.entity";
-import { Column, Entity, JoinColumn, OneToOne } from "typeorm";
-import { BaseEntity } from "../../base.entity";
+import { User } from '../../user/entities/user.entity';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import { BaseEntity } from '../../base.entity';
+import { Project } from '../../project/entities/project.entity';
 
-@Entity('client')
+@Entity('clients')
 export class Client extends BaseEntity {
-    @Column({ default: "John Doe", nullable: true })
+    @Column({ nullable: true })
     contactPerson: string;
 
     @Column({ nullable: true })
@@ -17,8 +18,10 @@ export class Client extends BaseEntity {
     @Column({ nullable: true })
     address: string;
 
-    @OneToOne(() => User, (user) => user.profile, { onDelete: 'CASCADE' })
+    @OneToOne(() => User, (user) => user.client)
     @JoinColumn()
-    user: User
+    user: User;
 
+    @OneToMany(() => Project, (project) => project.client)
+    projects: Project[]
 }

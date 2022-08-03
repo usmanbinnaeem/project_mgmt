@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
+import { BaseEntity } from "../../base.entity";
 import { Profile } from "../../profile/entities/profile.entity";
 import { Project } from "../../project/entities/project.entity";
 import { Column, Entity, OneToMany } from "typeorm";
-import { BaseEntity } from "../../base.entity";
 
 @Entity('team')
 export class Team extends BaseEntity {

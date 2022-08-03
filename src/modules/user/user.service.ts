@@ -1,51 +1,40 @@
 /* eslint-disable prettier/prettier */
-
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
 
-  constructor(@InjectRepository(User) private readonly repository: Repository<User>) { }
-  async create(createUserDto: CreateUserDto) {
-    const email = createUserDto.email;
-    const existUser = await this.repository.findOneBy({ email })
-    if (!existUser) {
-      const user = await this.repository.save(createUserDto)
-      return user
-    } else {
-      throw new BadRequestException("User already exists with this email")
-    }
+  constructor(@InjectRepository(User) private repository: Repository<User>) { }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    return this.repository.save(createUserDto);
   }
 
   findAll() {
-    return this.repository.find({ relations: ['profiles', 'clients'] });
+    return this.repository.find({ relations: ['profile', 'profile.designation', 'client'] });
   }
 
   findOne(id: number) {
-    const user = this.repository.findOne({
+    return this.repository.findOne({
       where: { id },
-      relations: ['profiles', 'clients']
-    })
-    return user;
+      relations: ['profile', 'profile.designation', 'client'],
+    });
   }
 
-  async findOneByEmail(email: string) {
-    return await this.repository.findOneBy({ email })
+  findByEmail(email: string) {
+    return this.repository.findOneBy({ email });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.repository.update({ id }, updateUserDto);
   }
 
-  async remove(id: number) {
-    await this.repository.delete(id)
-    return {
-      message: `User deleted Successfully with id# ${id}`
-    }
+  remove(id: number) {
+    return this.repository.delete(id);
   }
 }

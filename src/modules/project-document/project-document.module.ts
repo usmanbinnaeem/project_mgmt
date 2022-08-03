@@ -9,6 +9,6 @@ import { ProjectDocument } from './entities/project-document.entity';
   imports: [TypeOrmModule.forFeature([ProjectDocument])],
   controllers: [ProjectDocumentController],
   providers: [ProjectDocumentService],
-  exports: [TypeOrmModule, ProjectDocumentService],
+  exports: [ProjectDocumentService],
 })
 export class ProjectDocumentModule { }

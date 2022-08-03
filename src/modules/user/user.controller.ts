@@ -1,31 +1,50 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './enums';
-import { ProfileService } from '../profile/profile.service';
 import { ClientService } from '../client/client.service';
-import { DesignationService } from '../designation/designation.service';
+import { ProfileService } from '../profile/profile.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly desiginationService: DesignationService, private readonly profileService: ProfileService, private readonly clientService: ClientService) { }
+  constructor(private readonly userService: UserService, private readonly clientService: ClientService,
+    private readonly profileService: ProfileService,) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    const email = createUserDto.email;
-    const existUser = await this.userService.findOneByEmail(email)
-    if (!existUser) {
-      const user = await this.userService.create(createUserDto)
-      const desigination = await this.desiginationService.create(createUserDto.profile.designation)
-      if (createUserDto.role === Role.Admin || createUserDto.role === Role.Staff) {
-        await this.profileService.create(createUserDto.profile, user.id, desigination)
-      }
-      if (createUserDto.role === Role.Client) {
-        await this.clientService.create(createUserDto.client, user.id)
-      }
-      return user
+    const userExist = await this.userService.findByEmail(createUserDto.email);
+
+    if (userExist) {
+      throw new BadRequestException('User already exists with provided email');
+    }
+
+    const user = await this.userService.create(createUserDto);
+
+    if (createUserDto.role === Role.Client) {
+
+      const client = await this.clientService.create({
+        ...createUserDto.client,
+        user,
+      });
+
+      return {
+        ...user,
+        client,
+        profile: null,
+      };
+    } else {
+      const profile = await this.profileService.create({
+        ...createUserDto.profile,
+        user,
+      });
+
+      return {
+        ...user,
+        profile,
+        client: null,
+      };
     }
   }
 

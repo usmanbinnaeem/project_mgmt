@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { IsString } from "class-validator";
 
-export class CreateTeamDto {
+export class CreateProjectCategoryDto {
     @IsString()
     name: string;
-
 }
+

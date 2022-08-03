@@ -1,16 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { IsOptional, IsString } from "class-validator";
-import { CreateProfileDto } from "../../profile/dto/create-profile.dto";
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateDesignationDto {
-    @IsString()
+    @IsNotEmpty()
     name: string;
 
     @IsOptional()
-    profile: CreateProfileDto;
-
-    @IsString()
     responsibilities: string;
-
-
 }

@@ -1,54 +1,35 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { Client } from './entities/client.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ClientService {
-  constructor(@InjectRepository(Client) private readonly repository: Repository<Client>,
-    @InjectRepository(User) private readonly urepository: Repository<User>) { }
 
-  async create(createClientDto: CreateClientDto, id: number) {
-    const user = await this.urepository.findOneBy({ id })
-    const contactEmail = createClientDto.contactEmail;
-    const existClient = await this.repository.findOneBy({ contactEmail })
-    if (!existClient) {
-      if (user.role === "client") {
-        const client = this.repository.save({ ...createClientDto, user });
-        return client;
-      } else {
-        return {
-          message: "user already have profile associated"
-        }
-      }
-    } else {
-      return {
-        message: 'client already Exists'
-      }
-    }
+  constructor(
+    @InjectRepository(Client) private repository: Repository<Client>,
+  ) { }
+
+  create(createClientDto: CreateClientDto) {
+    return this.repository.save(createClientDto);
   }
 
   findAll() {
-    return this.repository.find();
+    return `This action returns all client`;
   }
 
-  async findOne(id: number) {
-    const client = await this.repository.findOneBy({ id })
-    return client;
+  findOne(id: number) {
+    return `This action returns a #${id} client`;
   }
 
   update(id: number, updateClientDto: UpdateClientDto) {
     return `This action updates a #${id} client`;
   }
 
-  async remove(id: number) {
-    await this.repository.delete(id)
-    return {
-      message: `user with id# ${id} has been deleted successfully`
-    }
+  remove(id: number) {
+    return `This action removes a #${id} client`;
   }
 }

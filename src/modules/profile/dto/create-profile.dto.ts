@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
-import { CreateDesignationDto } from "src/modules/designation/dto/create-designation.dto";
-import { Task } from "../../task/entities/task.entity";
-import { Team } from "../../team/entities/team.entity";
-import { User } from "../../user/entities/user.entity";
+import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { Task } from 'src/modules/task/entities/task.entity';
+import { Team } from 'src/modules/team/entities/team.entity';
+import { Designation } from '../../designation/entities/designation.entity';
+import { User } from '../../user/entities/user.entity';
 
 export class CreateProfileDto {
     @IsOptional()
@@ -19,9 +19,9 @@ export class CreateProfileDto {
     totalHours: number;
 
     @IsNumber()
-    sallaryPerHour: number;
+    salaryPerHour: number;
 
-    @IsIn(['admin', 'staff', 'client'])
+    @IsIn(['Full Time', 'Part Time'])
     @IsNotEmpty()
     jobType: string;
 
@@ -29,12 +29,11 @@ export class CreateProfileDto {
     user: User;
 
     @IsOptional()
-    designation: CreateDesignationDto;
+    designation: Designation;
 
     @IsOptional()
-    task: Task[];
+    tasks: Task[];
 
     @IsOptional()
     team: Team;
-
 }

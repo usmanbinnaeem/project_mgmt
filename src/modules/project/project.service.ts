@@ -1,26 +1,38 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Project } from './entities/project.entity';
 
 @Injectable()
 export class ProjectService {
-  create(createProjectDto: CreateProjectDto) {
-    return 'This action adds a new project';
+
+  constructor(
+    @InjectRepository(Project) private repository: Repository<Project>,
+  ) { }
+
+  async create(createProjectDto: CreateProjectDto) {
+    return await this.repository.save(createProjectDto);
   }
 
   findAll() {
-    return `This action returns all project`;
+    return this.repository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} project`;
+    return this.repository.findOne({
+      where: { id }
+    });
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`;
+    return this.repository.update({ id }, updateProjectDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`;
+  async remove(id: number) {
+    await this.repository.delete(id)
+    return `Project with id #${id} deleted successfully`;
   }
 }

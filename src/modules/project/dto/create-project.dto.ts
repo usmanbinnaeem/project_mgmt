@@ -1,9 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { IsBoolean, IsOptional, IsString } from "class-validator";
-import { CreateProjectCategoryDto } from "../../projectCategory/dto/create-projectCategory.dto";
-import { CreateProjectDocumentDto } from "../../project-document/dto/create-project-document.dto";
-import { CreateTaskDto } from "../../task/dto/create-task.dto";
-import { CreateTeamDto } from "../../team/dto/create-team.dto";
+import { CreateProjectCategoryDto } from "../../project-category/dto/create-project-category.dto";
+import { Client } from "src/modules/client/entities/client.entity";
 
 export class CreateProjectDto {
     @IsString()
@@ -31,11 +29,6 @@ export class CreateProjectDto {
     status: boolean;
 
     @IsOptional()
-    document: CreateProjectDocumentDto;
+    client: Client;
 
-    @IsOptional()
-    team: CreateTeamDto;
-
-    @IsOptional()
-    task: CreateTaskDto;
 }

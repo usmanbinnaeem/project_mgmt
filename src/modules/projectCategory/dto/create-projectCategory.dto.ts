@@ -7,5 +7,5 @@ export class CreateProjectCategoryDto {
     name: string;
 
     @IsOptional()
-    project: CreateProjectDto;
+    projects: CreateProjectDto;
 }
