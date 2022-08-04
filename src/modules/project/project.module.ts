@@ -10,5 +10,6 @@ import { ProjectDocumentModule } from '../project-document/project-document.modu
   imports: [TypeOrmModule.forFeature([Project]), ProjectDocumentModule],
   controllers: [ProjectController],
   providers: [ProjectService],
+  exports: [ProjectService]
 })
 export class ProjectModule { }

@@ -22,6 +22,6 @@ export class Client extends BaseEntity {
     @JoinColumn()
     user: User;
 
-    @OneToMany(() => Project, (project) => project.client)
+    @OneToMany(() => Project, (project) => project.client, { onDelete: 'CASCADE' })
     projects: Project[]
 }

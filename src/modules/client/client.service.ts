@@ -18,18 +18,19 @@ export class ClientService {
   }
 
   findAll() {
-    return `This action returns all client`;
+    return this.repository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  findOne(id: number, relations = []) {
+    return this.repository.findOne({ where: { id }, relations });
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    return await this.repository.update({ id }, updateClientDto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    await this.repository.delete(id)
     return `This action removes a #${id} client`;
   }
 }
