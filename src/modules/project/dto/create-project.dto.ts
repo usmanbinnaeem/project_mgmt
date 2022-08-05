@@ -2,6 +2,7 @@
 import { IsBoolean, IsOptional, IsString } from "class-validator";
 import { CreateProjectCategoryDto } from "../../project-category/dto/create-project-category.dto";
 import { Client } from "src/modules/client/entities/client.entity";
+import { Team } from "src/modules/team/entities/team.entity";
 
 export class CreateProjectDto {
     @IsString()
@@ -30,5 +31,8 @@ export class CreateProjectDto {
 
     @IsOptional()
     client: Client;
+
+    @IsOptional()
+    team: Team
 
 }

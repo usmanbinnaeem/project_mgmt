@@ -5,9 +5,10 @@ import { ProjectController } from './project.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './entities/project.entity';
 import { ProjectDocumentModule } from '../project-document/project-document.module';
+import { TaskModule } from '../task/task.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project]), ProjectDocumentModule],
+  imports: [TypeOrmModule.forFeature([Project]), ProjectDocumentModule, TaskModule],
   controllers: [ProjectController],
   providers: [ProjectService],
   exports: [ProjectService]

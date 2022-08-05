@@ -3,10 +3,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { TaskService } from '../task/task.service';
+import { UpdateTaskDto } from '../task/dto/update-task.dto';
+import { CreateTaskDto } from '../task/dto/create-task.dto';
+import { Project } from './entities/project.entity';
 
 @Controller('projects')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) { }
+  constructor(private readonly projectService: ProjectService,
+    private readonly taskService: TaskService) { }
 
   @Post()
   create(@Body() createProjectDto: CreateProjectDto) {
@@ -31,5 +36,26 @@ export class ProjectController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.projectService.remove(+id);
+  }
+
+  /**
+   * Create Task Inside Projects
+   */
+
+  @Get(':id/tasks')
+  async tasks(@Param('id') id: number) {
+    const project = await this.projectService.findOne(id, ['tasks'])
+    return project.tasks;
+  }
+
+  @Post(':id/tasks')
+  createTask(@Param('id') id: number, @Body() taskDto: CreateTaskDto) {
+    const task = this.taskService.create({ ...taskDto, project: { id } as Project })
+    return task;
+  }
+
+  @Patch(':id/tasks')
+  updateTask(@Body() taskDto: UpdateTaskDto, taskId = 3) {
+    return this.taskService.update(taskId, taskDto)
   }
 }

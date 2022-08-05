@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
-import { CreateProfileDto } from "../../profile/dto/create-profile.dto";
+import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Profile } from "src/modules/profile/entities/profile.entity";
 import { CreateProjectDto } from "../../project/dto/create-project.dto";
 
 export class CreateTaskDto {
@@ -12,7 +12,7 @@ export class CreateTaskDto {
     description: string;
 
     @IsOptional()
-    assignee: CreateProfileDto;
+    assignee: Profile;
 
     @IsString()
     reporter: string;
@@ -24,8 +24,9 @@ export class CreateTaskDto {
     @IsString()
     estimatedDuration: string;
 
-    @IsBoolean()
-    status: boolean;
+    @IsNotEmpty()
+    @IsIn(['todo', 'in progress', 'done'])
+    status: string;
 
     @IsOptional()
     project: CreateProjectDto;

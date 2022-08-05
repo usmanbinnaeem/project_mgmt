@@ -21,9 +21,10 @@ export class ProjectService {
     return this.repository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: number, relations = []) {
     return this.repository.findOne({
-      where: { id }
+      where: { id },
+      relations
     });
   }
 
