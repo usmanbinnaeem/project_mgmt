@@ -9,7 +9,7 @@ import { Team } from './entities/team.entity';
 import { UpdateProjectDto } from '../project/dto/update-project.dto';
 import { ProjectService } from '../project/project.service';
 
-@Controller('team')
+@Controller('teams')
 export class TeamController {
   constructor(private readonly teamService: TeamService,
     private readonly profileService: ProfileService,

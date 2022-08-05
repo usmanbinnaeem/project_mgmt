@@ -15,12 +15,12 @@ export class ProfileController {
 
   @Get()
   findAll() {
-    return this.profileService.findAll();
+    return this.profileService.findAll(['designation', 'tasks', 'team']);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.profileService.findOne(+id);
+    return this.profileService.findOne(+id, ['designation', 'tasks', 'team']);
   }
 
   @Patch(':id')

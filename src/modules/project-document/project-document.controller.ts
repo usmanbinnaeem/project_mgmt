@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProjectDocumentService } from './project-document.service';
 import { CreateProjectDocumentDto } from './dto/create-project-document.dto';
 import { UpdateProjectDocumentDto } from './dto/update-project-document.dto';
+import { Project } from '../project/entities/project.entity';
 
 @Controller('project-document')
 export class ProjectDocumentController {
-  constructor(private readonly projectDocumentService: ProjectDocumentService) {}
+  constructor(
+    private readonly projectDocumentService: ProjectDocumentService,
+  ) { }
 
   @Post()
-  create(@Body() createProjectDocumentDto: CreateProjectDocumentDto) {
-    return this.projectDocumentService.create(createProjectDocumentDto);
+  create(@Body() createProjectDocumentDto: CreateProjectDocumentDto, id = 2) {
+    return this.projectDocumentService.create({ ...createProjectDocumentDto, project: { id } as Project });
   }
 
   @Get()
@@ -23,7 +35,10 @@ export class ProjectDocumentController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDocumentDto: UpdateProjectDocumentDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProjectDocumentDto: UpdateProjectDocumentDto,
+  ) {
     return this.projectDocumentService.update(+id, updateProjectDocumentDto);
   }
 

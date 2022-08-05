@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { IsNumber, IsOptional, IsString } from "class-validator";
-import { CreateProjectDto } from "../../project/dto/create-project.dto";
+import { Project } from "src/modules/project/entities/project.entity";
 
 export class CreateProjectDocumentDto {
     @IsString()
@@ -16,5 +16,5 @@ export class CreateProjectDocumentDto {
     type: string;
 
     @IsOptional()
-    project: CreateProjectDto;
+    project: Project;
 }

@@ -17,8 +17,10 @@ export class ClientService {
     return this.repository.save(createClientDto);
   }
 
-  findAll() {
-    return this.repository.find();
+  findAll(relations = []) {
+    return this.repository.find({
+      relations
+    });
   }
 
   findOne(id: number, relations = []) {

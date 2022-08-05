@@ -30,12 +30,12 @@ export class ClientController {
 
   @Get()
   findAll() {
-    return this.clientService.findAll();
+    return this.clientService.findAll(['projects']);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clientService.findOne(+id);
+    return this.clientService.findOne(+id, ['projects']);
   }
 
   @Patch(':id')

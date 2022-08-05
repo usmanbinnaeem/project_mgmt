@@ -17,8 +17,10 @@ export class ProjectService {
     return await this.repository.save(createProjectDto);
   }
 
-  findAll() {
-    return this.repository.find();
+  findAll(relations = []) {
+    return this.repository.find({
+      relations
+    });
   }
 
   findOne(id: number, relations = []) {

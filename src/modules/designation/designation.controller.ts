@@ -4,7 +4,7 @@ import { DesignationService } from './designation.service';
 import { CreateDesignationDto } from './dto/create-designation.dto';
 import { UpdateDesignationDto } from './dto/update-designation.dto';
 
-@Controller('designations')
+@Controller('designation')
 export class DesignationController {
   constructor(private readonly designationService: DesignationService) { }
 

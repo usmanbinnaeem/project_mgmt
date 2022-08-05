@@ -16,12 +16,17 @@ export class ProfileService {
     return this.repository.save(createProfileDto);
   }
 
-  findAll() {
-    return this.repository.find();
+  findAll(relations = []) {
+    return this.repository.find({
+      relations
+    });
   }
 
-  findOne(id: number) {
-    return this.repository.findOneBy({ id });
+  findOne(id: number, relations = []) {
+    return this.repository.findOne({
+      where: { id },
+      relations
+    });
   }
 
   update(id: number, updateProfileDto: UpdateProfileDto) {

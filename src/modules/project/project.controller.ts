@@ -20,12 +20,12 @@ export class ProjectController {
 
   @Get()
   findAll() {
-    return this.projectService.findAll();
+    return this.projectService.findAll(['category', 'documents', 'team', 'tasks', 'client']);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.projectService.findOne(+id);
+    return this.projectService.findOne(+id, ['category', 'documents', 'team', 'tasks', 'client']);
   }
 
   @Patch(':id')
