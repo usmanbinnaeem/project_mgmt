@@ -15,8 +15,8 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './modules/auth/jwt.guard';
 import { LocalAuthGuard } from './modules/auth/local.guard';
+import { AbilitiesGuards } from './modules/ability/ability.guard';
 
 @Module({
   imports: [
@@ -49,6 +49,10 @@ import { LocalAuthGuard } from './modules/auth/local.guard';
       provide: APP_GUARD,
       useClass: LocalAuthGuard,
     },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: AbilitiesGuards,
+    // }
   ],
 })
 export class AppModule { }

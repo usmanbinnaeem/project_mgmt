@@ -13,6 +13,8 @@ import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from '../auth/jwt.guard';
+import { checkAbilities, ReadUserAbility } from '../ability/ability.decorator';
+import { AbilitiesGuards } from '../ability/ability.guard';
 
 @Controller('profiles')
 export class ProfileController {
@@ -24,6 +26,9 @@ export class ProfileController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @checkAbilities(new ReadUserAbility())
+  @UseGuards(AbilitiesGuards)
+
   @Get()
   findAll() {
     return this.profileService.findAll(['designation', 'tasks', 'team']);

@@ -8,6 +8,8 @@ import {
   Param,
   Delete,
   BadRequestException,
+  ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +17,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './enums';
 import { ClientService } from '../client/client.service';
 import { ProfileService } from '../profile/profile.service';
+import { AbilityFactory } from '../ability/ability.factory';
+import { ForbiddenError } from '@casl/ability';
+import { Action } from '../ability/action.enum';
+import { Client } from '../client/entities/client.entity';
+import { Profile } from '../profile/entities/profile.entity';
+import { checkAbilities, DeleteUserAbility, ReadProfileAbility, ReadUserAbility } from '../ability/ability.decorator';
+import { AbilitiesGuards } from '../ability/ability.guard';
 
 @Controller('users')
 export class UserController {
@@ -22,6 +31,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly clientService: ClientService,
     private readonly profileService: ProfileService,
+    private abilityFactory: AbilityFactory,
   ) { }
 
   @Post()
@@ -35,35 +45,58 @@ export class UserController {
     const user = await this.userService.create(createUserDto);
 
     if (createUserDto.role === Role.Client) {
-      const client = await this.clientService.create({
-        ...createUserDto.client,
-        user,
-      });
+      // const ability = this.abilityFactory.defineAbility(user);
+      try {
+        // ForbiddenError.from(ability).throwUnlessCan(Action.create, Client);
+        const client = await this.clientService.create({
+          ...createUserDto.client,
+          user,
+        });
 
-      return {
-        ...user,
-        client,
-        profile: null,
-      };
+        return {
+          ...user,
+          client,
+          profile: null,
+        };
+      } catch (error) {
+        // if (error instanceof ForbiddenError) {
+        //   throw new ForbiddenException(error.message);
+        // }
+      }
+
     } else {
-      const profile = await this.profileService.create({
-        ...createUserDto.profile,
-        user,
-      });
+      // const ability = this.abilityFactory.defineAbility(user);
+      try {
+        // ForbiddenError.from(ability).throwUnlessCan(Action.create, Profile);
+        const profile = await this.profileService.create({
+          ...createUserDto.profile,
+          user,
+        });
 
-      return {
-        ...user,
-        profile,
-        client: null,
-      };
+        return {
+          ...user,
+          profile,
+          client: null,
+        };
+      } catch (error) {
+        // if (error instanceof ForbiddenError) {
+        //   throw new ForbiddenException(error.message);
+        // }
+      }
+
     }
   }
 
+  @UseGuards(AbilitiesGuards)
+  @checkAbilities(new ReadUserAbility())
+  @checkAbilities(new ReadProfileAbility())
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
+  @checkAbilities(new ReadUserAbility())
+  @checkAbilities(new ReadProfileAbility())
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
@@ -74,6 +107,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @checkAbilities(new DeleteUserAbility())
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
