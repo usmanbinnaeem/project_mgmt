@@ -10,7 +10,7 @@ import { Client } from '../../client/entities/client.entity';
 @Entity('users')
 export class User extends BaseEntity {
     @Column()
-    name: string;
+    username: string;
 
     @Column({ unique: true })
     email: string;

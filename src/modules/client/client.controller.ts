@@ -7,7 +7,9 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 import { CreateProjectDto } from '../project/dto/create-project.dto';
 import { UpdateProjectDto } from '../project/dto/update-project.dto';
 import { ProjectService } from '../project/project.service';
@@ -28,21 +30,25 @@ export class ClientController {
     return this.clientService.create(createClientDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.clientService.findAll(['projects']);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.clientService.findOne(+id, ['projects']);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientService.update(+id, updateClientDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.clientService.remove(+id);
@@ -54,20 +60,26 @@ export class ClientController {
 
   @Get(':id/projects')
   async listProjects(@Param('id') id: number) {
-    const client = await this.clientService.findOne(id, ['projects'])
+    const client = await this.clientService.findOne(id, ['projects']);
     return client.projects;
   }
 
   @Post(':id/projects')
-  async createProject(@Param('id') id: number, @Body() createProjectDto: CreateProjectDto) {
+  async createProject(
+    @Param('id') id: number,
+    @Body() createProjectDto: CreateProjectDto,
+  ) {
     return await this.projectService.create({
       ...createProjectDto,
-      client: { id } as Client
-    })
+      client: { id } as Client,
+    });
   }
 
   @Patch(':id/projects')
-  async updateCLientProject(@Body() updateProjectDto: UpdateProjectDto, proId = 4) {
+  async updateCLientProject(
+    @Body() updateProjectDto: UpdateProjectDto,
+    proId = 4,
+  ) {
     return this.projectService.update(+proId, updateProjectDto);
   }
 }

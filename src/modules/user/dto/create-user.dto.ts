@@ -14,7 +14,7 @@ import { CreateProfileDto } from '../../profile/dto/create-profile.dto';
 export class CreateUserDto {
     @IsNotEmpty()
     @IsString()
-    name: string;
+    username: string;
 
     @IsNotEmpty()
     @IsEmail()

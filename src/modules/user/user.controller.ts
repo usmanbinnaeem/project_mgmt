@@ -1,5 +1,14 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -9,8 +18,11 @@ import { ProfileService } from '../profile/profile.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService, private readonly clientService: ClientService,
-    private readonly profileService: ProfileService,) { }
+  constructor(
+    private readonly userService: UserService,
+    private readonly clientService: ClientService,
+    private readonly profileService: ProfileService,
+  ) { }
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -23,7 +35,6 @@ export class UserController {
     const user = await this.userService.create(createUserDto);
 
     if (createUserDto.role === Role.Client) {
-
       const client = await this.clientService.create({
         ...createUserDto.client,
         user,

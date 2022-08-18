@@ -8,7 +8,6 @@ import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-
   constructor(@InjectRepository(User) private repository: Repository<User>) { }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -16,7 +15,9 @@ export class UserService {
   }
 
   findAll() {
-    return this.repository.find({ relations: ['profile', 'profile.designation', 'client'] });
+    return this.repository.find({
+      relations: ['profile', 'profile.designation', 'client'],
+    });
   }
 
   findOne(id: number) {
@@ -26,8 +27,8 @@ export class UserService {
     });
   }
 
-  findByEmail(email: string) {
-    return this.repository.findOneBy({ email });
+  async findByEmail(email: string) {
+    return await this.repository.findOneBy({ email });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
