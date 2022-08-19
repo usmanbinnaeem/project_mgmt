@@ -16,7 +16,6 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { LocalAuthGuard } from './modules/auth/local.guard';
-import { AbilitiesGuards } from './modules/ability/ability.guard';
 
 @Module({
   imports: [
@@ -45,14 +44,10 @@ import { AbilitiesGuards } from './modules/ability/ability.guard';
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: LocalAuthGuard,
-    },
     // {
     //   provide: APP_GUARD,
-    //   useClass: AbilitiesGuards,
-    // }
+    //   useClass: LocalAuthGuard,
+    // },
   ],
 })
 export class AppModule { }

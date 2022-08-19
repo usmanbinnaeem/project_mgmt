@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt.guard';
 import { LocalAuthGuard } from './local.guard';
 
 @Controller('auth')

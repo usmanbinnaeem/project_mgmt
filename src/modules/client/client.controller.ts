@@ -9,8 +9,6 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { checkAbilities, ReadUserAbility } from '../ability/ability.decorator';
-import { AbilitiesGuards } from '../ability/ability.guard';
 import { JwtAuthGuard } from '../auth/jwt.guard';
 import { CreateProjectDto } from '../project/dto/create-project.dto';
 import { UpdateProjectDto } from '../project/dto/update-project.dto';
@@ -32,9 +30,6 @@ export class ClientController {
     return this.clientService.create(createClientDto);
   }
 
-  @UseGuards(JwtAuthGuard, AbilitiesGuards)
-  // @UseGuards(AbilitiesGuards)
-  @checkAbilities(new ReadUserAbility())
   @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {

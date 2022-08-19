@@ -4,6 +4,6 @@ import { AbilityFactory } from './ability.factory';
 
 @Module({
     providers: [AbilityFactory],
-    exports: [AbilityFactory],
+    exports: [AbilityFactory]
 })
 export class AbilityModule { }

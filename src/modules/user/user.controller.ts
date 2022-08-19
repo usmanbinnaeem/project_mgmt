@@ -8,8 +8,9 @@ import {
   Param,
   Delete,
   BadRequestException,
-  ForbiddenException,
   UseGuards,
+  Request,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,13 +18,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './enums';
 import { ClientService } from '../client/client.service';
 import { ProfileService } from '../profile/profile.service';
+import { JwtAuthGuard } from '../auth/jwt.guard';
 import { AbilityFactory } from '../ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
-import { Action } from '../ability/action.enum';
+import { Action } from '../ability/action';
 import { Client } from '../client/entities/client.entity';
 import { Profile } from '../profile/entities/profile.entity';
-import { checkAbilities, DeleteUserAbility, ReadProfileAbility, ReadUserAbility } from '../ability/ability.decorator';
-import { AbilitiesGuards } from '../ability/ability.guard';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UserController {
@@ -35,79 +36,106 @@ export class UserController {
   ) { }
 
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto, @Request() req) {
     const userExist = await this.userService.findByEmail(createUserDto.email);
 
-    if (userExist) {
-      throw new BadRequestException('User already exists with provided email');
+    const reqUser = req;
+    console.log('-----> reqUser', reqUser);
+
+    const ability = this.abilityFactory.defineAbility(reqUser);
+    console.log('-----> check ability', ability.can(Action.Create, User));
+
+    // if (userExist) {
+    //   throw new BadRequestException('User already exists with provided email');
+    // }
+
+    // const reqUser = req.user;
+    // console.log('-----> reqUser', req.user);
+
+    // const ability = this.abilityFactory.defineAbility(reqUser);
+    // console.log('-----> check ability', ability.can(Action.Create, User));
+
+    // const isAllowed = ability.can(Action.Create, User);
+    // if (!isAllowed) {
+    //   throw new ForbiddenException('You are not allowed to create a user');
+    // }
+
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.Create, User);
+      return await this.userService.create(createUserDto);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException('You are not allowed to create a user');
+      }
     }
 
-    const user = await this.userService.create(createUserDto);
 
-    if (createUserDto.role === Role.Client) {
-      // const ability = this.abilityFactory.defineAbility(user);
-      try {
-        // ForbiddenError.from(ability).throwUnlessCan(Action.create, Client);
-        const client = await this.clientService.create({
-          ...createUserDto.client,
-          user,
-        });
 
-        return {
-          ...user,
-          client,
-          profile: null,
-        };
-      } catch (error) {
-        // if (error instanceof ForbiddenError) {
-        //   throw new ForbiddenException(error.message);
-        // }
-      }
+    // if (createUserDto.role === Role.Client) {
+    //   const ability = this.abilityFactory.defineAbility(reqUser);
 
-    } else {
-      // const ability = this.abilityFactory.defineAbility(user);
-      try {
-        // ForbiddenError.from(ability).throwUnlessCan(Action.create, Profile);
-        const profile = await this.profileService.create({
-          ...createUserDto.profile,
-          user,
-        });
+    //   try {
+    //     ForbiddenError.from(ability)
+    //       .setMessage('You can not create a client')
+    //       .throwUnlessCan(Action.Create, Client);
+    //     const client = await this.clientService.create({
+    //       ...createUserDto.client,
+    //       user,
+    //     });
 
-        return {
-          ...user,
-          profile,
-          client: null,
-        };
-      } catch (error) {
-        // if (error instanceof ForbiddenError) {
-        //   throw new ForbiddenException(error.message);
-        // }
-      }
+    //     return {
+    //       ...user,
+    //       client,
+    //       profile: null,
+    //     };
+    //   } catch (error) {
+    //     if (error instanceof ForbiddenError) {
+    //       throw new ForbiddenException(error.message);
+    //     }
+    //   }
+    // } else {
+    //   const ability = this.abilityFactory.defineAbility(reqUser);
+    //   try {
+    //     ForbiddenError.from(ability)
+    //       .setMessage('You can not create a profile')
+    //       .throwUnlessCan(Action.Create, Profile);
+    //     const profile = await this.profileService.create({
+    //       ...createUserDto.profile,
+    //       user,
+    //     });
 
-    }
+    //     return {
+    //       ...user,
+    //       profile,
+    //       client: null,
+    //     };
+    //   } catch (error) {
+    //     if (error instanceof ForbiddenError) {
+    //       throw new ForbiddenException(error.message);
+    //     }
+    //   }
+    // }
   }
 
-  @UseGuards(AbilitiesGuards)
-  @checkAbilities(new ReadUserAbility())
-  @checkAbilities(new ReadProfileAbility())
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(@Request() req) {
+    console.log('-----> reqUser', req);
     return this.userService.findAll();
   }
 
-  @checkAbilities(new ReadUserAbility())
-  @checkAbilities(new ReadProfileAbility())
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-
-  @checkAbilities(new DeleteUserAbility())
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
