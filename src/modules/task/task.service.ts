@@ -18,9 +18,10 @@ export class TaskService {
     return await this.repository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, relations = []) {
     return await this.repository.findOne({
       where: { id },
+      relations
     });
   }
 
@@ -29,7 +30,6 @@ export class TaskService {
   }
 
   async remove(id: number) {
-    await this.repository.delete(id);
-    return `This action removed task id #${id}`;
+    return await this.repository.delete(id);
   }
 }

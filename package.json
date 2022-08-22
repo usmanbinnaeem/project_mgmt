@@ -1,5 +1,5 @@
 {
-  "name": "project-mgmt-app",
+  "name": "testing",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -24,7 +24,7 @@
     "migration:run": "yarn typeorm migration:run -d src/config/database/data-source.ts",
     "migration:revert": "yarn typeorm migration:revert -d src/config/database/data-source.ts"
   },
-   "dependencies": {
+  "dependencies": {
     "@casl/ability": "^6.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",

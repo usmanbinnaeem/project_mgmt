@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -7,7 +7,12 @@ import { TaskService } from '../task/task.service';
 import { UpdateTaskDto } from '../task/dto/update-task.dto';
 import { CreateTaskDto } from '../task/dto/create-task.dto';
 import { Project } from './entities/project.entity';
+import { JwtAuthGuard } from '../auth/jwt.guard';
+import { AbilitiesGuard } from '../ability/abilities.guard';
+import { Action } from '../ability/action';
+import { CheckAbilities } from '../ability/abilities.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService,
@@ -18,11 +23,15 @@ export class ProjectController {
     return this.projectService.create(createProjectDto);
   }
 
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Read, subject: Project })
   @Get()
   findAll() {
     return this.projectService.findAll(['category', 'documents', 'team', 'tasks', 'client']);
   }
 
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Read, subject: Project })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.projectService.findOne(+id, ['category', 'documents', 'team', 'tasks', 'client']);
